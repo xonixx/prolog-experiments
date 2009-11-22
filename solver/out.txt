@@ -1,0 +1,61 @@
+Solving:
+
+domains:
+
+engl shved dat norv germ from 1 2 3 4 5;
+red green white yellow blue from 1 2 3 4 5;
+dog chicken cat loshad fish from 1 2 3 4 5;
+tea coffe milk pivo water from 1 2 3 4 5;
+pallmall dunhill marlboro winfield rothmans from 1 2 3 4 5;
+
+conditions:
+
+engl=red;
+shved=dog;
+dat=tea;
+white-green=1;
+green=coffe;
+pallmall=chicken;
+milk=3;
+yellow=dunhill;
+norv=1;
+abs(marlboro-cat)=1;
+abs(loshad-dunhill)=1;
+winfield=pivo;
+abs(norv-blue)=1;
+germ=rothmans;
+abs(marlboro-water)=1;
+
+Lexing...
+
+[domains, :, engl, shved, dat, norv, germ, from, 1, 2, 3, 4, 5, (;), red, green, white, yellow, blue, from, 1, 2, 3, 4, 5, (;), dog, chicken, cat, loshad, fish, from, 1, 2, 3, 4, 5, (;), tea, coffe, milk, pivo, water, from, 1, 2, 3, 4, 5, (;), pallmall, dunhill, marlboro, winfield, rothmans, from, 1, 2, 3, 4, 5, (;), conditions, :, engl, =, red, (;), shved, =, dog, (;), dat, =, tea, (;), white, -, green, =, 1, (;), green, =, coffe, (;), pallmall, =, chicken, (;), milk, =, 3, (;), yellow, =, dunhill, (;), norv, =, 1, (;), abs, (, marlboro, -, cat, ), =, 1, (;), abs, (, loshad, -, dunhill, ), =, 1, (;), winfield, =, pivo, (;), abs, (, norv, -, blue, ), =, 1, (;), germ, =, rothmans, (;), abs, (, marlboro, -, water, ), =, 1, (;)]
+
+Parsing...
+
+program([domain([engl, shved, dat, norv, germ], [1, 2, 3, 4, 5]), domain([red, green, white, yellow, blue], [1, 2, 3, 4, 5]), domain([dog, chicken, cat, loshad, fish], [1, 2, 3, 4, 5]), domain([tea, coffe, milk, pivo, water], [1, 2, 3, 4, 5]), domain([pallmall, dunhill, marlboro, winfield, rothmans], [1, 2, 3, 4, 5])], [engl=red, shved=dog, dat=tea, white-green=1, green=coffe, pallmall=chicken, milk=3, yellow=dunhill, norv=1, abs(marlboro-cat)=1, abs(loshad-dunhill)=1, winfield=pivo, abs(norv-blue)=1, germ=rothmans, abs(marlboro-water)=1])
+
+Solution:
+
+[engl=3, shved=5, dat=2, norv=1, germ=4, red=3, green=4, white=5, yellow=1, blue=2, dog=5, chicken=3, cat=1, loshad=2, fish=4, tea=2, coffe=4, milk=3, pivo=5, water=1, pallmall=3, dunhill=1, marlboro=2, winfield=5, rothmans=4]
+Solving:
+
+domains:
+a b c d e f g h from 1 2 3 4 5 6 7 8;
+conditions:
+a+h=b;
+2*g=c;
+3*d=h;
+d+f=a+g;
+c+e=11;
+
+Lexing...
+
+[domains, :, a, b, c, d, e, f, g, h, from, 1, 2, 3, 4, 5, 6, 7, 8, (;), conditions, :, a, +, h, =, b, (;), 2, *, g, =, c, (;), 3, *, d, =, h, (;), d, +, f, =, a, +, g, (;), c, +, e, =, 11, (;)]
+
+Parsing...
+
+program([domain([a, b, c, d, e, f, g, h], [1, 2, 3, 4, 5, 6, 7, 8])], [a+h=b, 2*g=c, 3*d=h, d+f=a+g, c+e=11])
+
+Solution:
+
+[a=5, b=8, c=4, d=1, e=7, f=6, g=2, h=3]

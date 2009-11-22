@@ -1,0 +1,94 @@
+zap(v($ˆŒ…‚$,$Œ€Š‘ˆŒ$,$€‚‹‚ˆ—$,1981),m($‹€„€$,$246$,$‘ˆˆ‰$,$2001$)).
+zap(v($Œ€‹Š‚$,$Œˆ•€ˆ‹$,$ƒˆƒœ…‚ˆ—$,1985),m($†ˆƒ“‹ˆ$,$533$,$…‹›‰$,$2000$)).
+zap(v($‹€—…Š$,$€„…‰$,$‚ˆŠ’‚ˆ—$,1982),m($‡€†…–$,$646$,$‘ˆˆ‰$,$1999$)).
+zap(v($‚$,$‚‹€„ˆŒˆ$,$‚€‹…’ˆ‚ˆ—$,1984),m($ˆ‚€$,$363$,$Š€‘›‰$,$1998$)).
+zap(v($Š›‹‚$,$ƒˆƒˆ‰$,$‘…ƒ……‚ˆ—$,1983),m($ˆ‚€$,$889$,$†ğ‹’›‰$,$2001$)).
+
+start:-reconsult('gibdd.db'),
+       menu.
+start:-menu.       
+
+menu:-cls,nl,
+      write('                    €‡€ ‡€ˆ‰ "‘€‚—ˆŠ ƒˆ„„"'    ),nl,
+      write('        	    1 - ‘Œ’ ‘„…†ˆŒƒ €‡› „€›•'   ),nl,
+      write('        	    2 - „€‚‹…ˆ… ‡€ˆ‘ˆ'                  ),nl,
+      write('        	    3 - “„€‹…ˆ… ‡€ˆ‘ˆ'                    ),nl,
+      write('		    4 - ˆ‘Š'				    ),nl,
+      write('		    5 - ˆ‡Œ……ˆ… ”€Œˆ‹ˆˆ ‚‹€„…‹œ–€'        ),nl,      
+      write('        	    6 - ‚›•„'                              ),nl,
+write('‚‚…„ˆ’… ‚€˜ ‚›: '),read_line(0,X),do(X).
+
+do($1$):-nl,zap(v(F,N,O,Y),m(M,P,C,D)),write(F),write(' '),write(N),write(' '),
+         write(O),write(' '),write(Y),write(' '),write(M),write(' '),
+         write(P),write(' '),write(C),write(' '),write(D),write(' '),nl,
+         fail.
+do($1$):-get0_noecho(X),menu.
+do($2$):-write('‚‚…„ˆ’… ‘‹…„“™ˆ… ‡€ˆ‘ˆ: '),nl,
+         write('”€Œˆ‹ˆŸ: '),read_line(0,F),
+         write('ˆŒŸ: '),read_line(0,N),
+         write('’—…‘’‚: '),read_line(0,O),
+         write('ƒ„ †„…ˆŸ: '),read_line(0,Y),
+         write('Œ€Š€ Œ€˜ˆ›: '),read_line(0,M),
+         write('Œ… Œ€˜ˆ›: '),read_line(0,P),
+         write('–‚…’ Œ€˜ˆ›: '),read_line(0,C),
+         write('’…•.‘Œ’: '),read_line(0,D),
+         write('„€‚‹Ÿ…Œ ‡€ˆ‘œ: '),
+         write(F),write(' '),write(N),write(' '),
+         write(O),write(' '),write(Y),write(' '),write(M),write(' '),
+         write(P),write(' '),write(C),write(' '),write(D),write(' '),
+         assertz(zap(v(F,N,O,Y),m(M,P,C,D))),menu.
+do($3$):-write('‚‚…„ˆ’… ”€Œˆ‹ˆ: '),read_line(0,F),
+         retract(zap(v(F,_,_,_),m(_,_,_,_))),menu.
+do($3$):-write('’€Š‰ ”€Œˆ‹ˆˆ …’'),get0_noecho(X),menu.       
+do($4$):-cls,nl,
+         write('              1 - ˆ‘Š  ”€Œˆ‹ˆˆ'),nl,
+         write('              2 - ˆ‘Š  Œ…“ Œ€˜ˆ›'),nl,
+         write('              3 - €‘˜ˆ…›‰ ˆ‘Š'),nl,
+         write('              4 - ‚›•„ ‚ ƒ‹€‚… Œ…'),nl,
+         write('‚‚…„ˆ’… ‚€˜ ‚›: '),read_line(0,Y),run(Y).
+         
+run($1$):-write('‚‚…„ˆ’… ”€Œˆ‹ˆ: '),read_line(0,F),
+        zap(v(F,N,O,Y),m(M,P,C,D)),
+        write(F),write(' '),write(N),write(' '),
+        write(O),write(' '),write(Y),write(' '),write(M),write(' '),
+        write(P),write(' '),write(C),write(' '),write(D),write(' '),
+        get0_noecho(X),do($4$).
+run($2$):-write('‚‚…„ˆ’… Œ… Œ€˜ˆ›: '),read_line(0,P),zap(v(F,N,O,Y),m(M,P,C,D)),
+        write(F),write(' '),write(N),write(' '),
+        write(O),write(' '),write(Y),write(' '),write(M),write(' '),
+        write(P),write(' '),write(C),write(' '),write(D),write(' '),
+        get0_noecho(X),do($4$).   
+run($3$):-write('‚‚…„ˆ’… –‚…’ Œ€˜ˆ›: '),read_line(0,C),
+          write('‚‚…„ˆ’… …‘Š‹œŠ –ˆ” ˆ‡ Œ…€: '),read_line(0,A),
+        zap(v(F,N,O,Y),m(M,P,C,D)),ros(A,P),
+        write(F),write(' '),write(N),write(' '),
+        write(O),write(' '),write(Y),write(' '),write(M),write(' '),
+        write(P),write(' '),write(C),write(' '),write(D),write(' '),nl,fail.
+run($3$):-get0_noecho(X),do($4$).       
+run($4$):-menu.              
+
+do($5$):- write('‚‚…„ˆ’… ‘’€“ ”€Œˆ‹ˆ ‚‹€„…‹œ–€: '),read_line(0,F),
+          zap(v(F,N,O,Y),m(M,P,C,D)),
+          write('€‰„…€ ‘‹…„“™€Ÿ ‡€ˆ‘œ: '),
+	  write(F),write(' '),write(N),write(' '),
+          write(O),write(' '),write(Y),write(' '),write(M),write(' '),
+          write(P),write(' '),write(C),write(' '),write(D),write(' '),nl,
+          write('‚‚…„ˆ’… ‚“ ”€Œˆ‹ˆ: '),read_line(0,F1),
+          retract(zap(v(F,_,_,_),m(_,_,_,_))),
+          assert(zap(v(F1,N,O,Y),m(M,P,C,D))),menu.
+do($5$):-write('’€Š‰ ”€Œˆ‹ˆˆ …’'),get0_noecho(X),menu.       
+
+do($6$):- save('gibdd.db'),
+          retractall(_),
+          write('                €‡€ ‘•€…€ ‚ ”€‰‹ GIBDD.DB'), nl,
+          write('                ‘€‘ˆ ‡€ €’“ ‘ ƒ€ŒŒ‰'). 
+
+
+ros($$,P):-!.
+ros(W,P):-string_length(W,L),substring(W,0,1,G),
+          string_search(G,P,I),L1 is L-1,substring(W,1,L1,Q),!,
+          ros(Q,P).     
+           
+retractall(Fact):- retract(Fact),
+                   fail.
+retractall(_).

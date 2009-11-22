@@ -1,0 +1,80 @@
+INSTALLING ARITY/PROLOG32 VERSION 1.1
+September 1994
+Copyright 1993-1995 (c) Arity Corporation
+-----------------------------------------
+
+YOUR DISKETTES
+--------------
+
+We ship our products on two types of media:
+    1.44 Mb 3 1/2 inch diskettes
+    1.2 Mb 5 1/4 inch diskettes
+
+
+ARITY/PROLOG32
+--------------
+
+This procedure is for installing:
+    Arity/Prolog32 for OS/2
+    Arity/Prolog32 for Win32
+
+To install Arity/Prolog place your diskette in the A (or B) drive
+and type:
+
+    A:INSTALL
+    (or B:INSTALL)
+
+The product will be installed at C:\ARITY32.  If you want the product
+installed elsewhere on your hard disk type:
+
+    A:INSTALL [directory-name]
+
+
+
+AFTER INSTALLATION
+------------------
+
+We recommend that you familiarize yourself with the included documentation
+and carefully read the README.DOC file.  This file contains information
+located NOWHERE ELSE. Additionally, you should always refer to the
+ERRORS.HLP file for information on any errors you may receive.
+
+You will need to modify your environment to use Arity/Prolog.  Assuming
+that you installed using the defaults, you need to add the following
+to your CONFIG.SYS file:
+
+    Add C:\ARITY32\DLL to your LIBPATH (OS/2 only)
+    Add C:\ARITY32\BIN to your PATH variable
+    Add C:\ARITY32\LIB to your LIB variable
+    Add C:\ARITY32\INCLUDE to your INCLUDE variable
+
+(In OS/2 you modify CONFIG.SYS.  In Windows 95 you modify AUTOEXEC.BAT.
+In Windows NT you use the System Applet in Control Panel).
+
+
+ARITY TECHNICAL SUPPORT
+-----------------------
+Arity strives to provide the highest level of customer service. Specific
+questions and suggestions about product features, usage and problems are
+always welcome. Technical support via telephone is free for the first 30
+days and is available on a yearly basis for a nominal fee, entitling you
+to unlimited telephone support during Arity's normal business hours.
+
+Additionally, we recommend that you take advantage of Arity's free support
+via fax or electronic bulletin board. Arity's fax number is (508) 371-1487
+and is available 24 hours a day.
+
+The telephone number of the Arity Bulletin Board (for support or technical
+help) is (508) 369-5622. Specifications for accessing the Arity Bulletin
+Board is: no parity; 1 stop bit; 8 data bits; 300, 1200, 2400, or
+9600 v32 v42bis.
+ 
+If you want to report a bug, try to have a systematic way of reproducing
+that bug in order for Technical Support to most effectively help fix the
+bug.  When you report a bug, please also include the serial number of your
+Arity products.
+
+In Cyberspace we can be reached at:
+
+    pgweiss@netcom.com
+    73677,2614	Compuserve

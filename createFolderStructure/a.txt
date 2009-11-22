@@ -1,0 +1,7 @@
+Project
+ Bin
+ Lib
+  External
+ Src
+  NamespaceA
+  NamespaceB

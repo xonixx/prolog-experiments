@@ -1,0 +1,22 @@
+:- use_module(library(clpfd)).
+
+make_sol([F | FF],[X | XX],[Y | YY], [(F,X,Y) | SS]) :- make_sol(FF,XX,YY,SS).
+make_sol([],[],[],[]).
+
+range([From | T], From, To) :- 
+	From < To, 
+	!, 
+	F1 is From + 1,
+	range(T, F1, To).
+range([To],To,To).
+
+solve(S, N) :-
+	length(FF, N),
+	length(XX, N),
+	length(YY, N),
+
+	FF ins 1..2, % 1 - eleph, 2 - castle
+	sum(FF, #=, 3*N//2),
+	
+	make_sol(FF,XX,YY,S).
+	

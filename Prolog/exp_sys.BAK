@@ -1,0 +1,120 @@
+
+start :Ц
+ consult('animals.pl'),
+              %  загружаем в базу информацию
+              %    из базы знаний */
+       write('Think an animal, I''l try to guess it'),
+       nl,
+       animals, /* попытка отгадать загаданное животное */
+       %retractall(_,dialog),
+       /* очищаем текущую
+          информацию */
+       %retractall(_,knowledge),
+                  /* очищаем информацию об известных
+          животных и свойствах */
+       nl,nl,write('Do you want play ones more? (1 - Yes, 2 - No)'),
+       read_true_char(C),
+       C='1',!,start.
+start:Ц
+       nl,nl,write('Bye!').
+       %readchar(_).
+animals:Ц
+        rule(X,L),
+        check_it(L),
+        nl,write('I think this is'),write(X),
+        nl,write('Am I right? (1 Ч yes, 2 Ч No)),
+        read_true_char(C),C='1',!.
+animals:Ц
+        nl,write('I don''t know what is this animal'),nl,
+        nl,write('Let us add it to the database?'),nl,
+        update.
+update:Ц
+        nl,write('Enter animal''s name'),
+        read(S),
+        add_cond(L), /* указываем свойства животного */
+        assert(rule(S,L)), /* добавл€ем информацию
+                  в базу знаний*/
+        %save("animals.ddb",knowledge)
+        /* сохран€ем базу
+                   знаний в файл */.
+add_cond(L):Ц
+             cond_is(_,'1'),!, /* имеетс€ информаци€
+            о свойствах животного */
+             nl,write('It is already known about this animal:'),
+             print_cond(1,[],L1),
+         /* вывод имеющейс€ о животном
+            информации */
+             nl,write('Is it known something else about the animal (1 Ч yes, 2 Ч no)'),
+             read_true_char(C),
+             read_cond(C,L1,L).
+add_cond(L):Ц
+             read_cond('1',[],L).
+print_cond(H,L,L):Ц
+        not(cond(H,_)),!,write('Nothing.'),nl.
+print_cond(H,L,L1):Ц
+         cond_is(H,'1'),!,
+         cond(H,T),
+         H1 is H+1,
+         nl,write(T),
+         print_cond(H1,[H | L],L1).
+print_cond(H,L,L1):Ц
+         H1 is H+1,
+         print_cond(H1,L,L1).
+read_cond('1',L,L2):Ц
+          ex_cond(1,L,L1,N),
+          new_cond(N,L1,L2),!.
+read_cond(_,L,L):Ц!.
+ex_cond(N,L,L,N):Ц
+       not(cond(N,_)),!.
+ex_cond(N,L,L1,N2):Ц
+         cond_is(N,_),!,
+         N1=N+1,
+         ex_cond(N1,L,L1,N2).
+ex_cond(N,L,L1,N2):Ц
+         cond(N,S),
+         nl,write('Is it '),write(S),write('? (1 Ч yes, 2 Ч no)'),
+         read_true_char(A),
+         wr_cond(A,N,L,L2),
+         N1 is N+1,
+         ex_cond(N1,L2,L1,N2).
+wr_cond('1',N,L,[N | L]):Ц!.
+wr_cond('2',_,L,L):Ц!.
+new_cond(N,L,L1):Ц
+       nl,write('Is there more properties? (1 Ч yes, 2Ц no)'),
+       read_true_char(A),
+       A='1',!,
+       nl,write('Describe an animal''s property'),
+       nl,write('as ''it <description of new property>'), readln(S),
+       assertz(cond(N,S)),
+                 /* добавление нового свойства
+         в базу знаний */
+       N1 is N+1,
+       new_cond(N1,[N | L],L1).
+new_cond(_,L,L).
+check_it([HT]):Ц
+              test_cond(H),
+              check_it(T).
+check_it([]).
+test_cond(H):-
+              cond_is(H,'1'),!. /* в базе имеетс€ информаци€
+             о наличии свойства */
+test_cond(H):Ц
+              cond_is(H,'2'),!,
+              fail. /* в базе имеетс€ информаци€
+           об отсутствии свойства */
+test_cond(H):Ц /* в базе нет никакой информации о данном
+       свойстве, получаем ее у человека */
+              cond(H,S),
+              nl,write('It '),write(S),write('? (1 Ч yes, 2 Ч no)'),
+              read_true_char(A),
+              assert(cond_is(H,A)),
+              test_cond(H).
+read_true_char(C):Ц
+        get_char(C1),
+        test(C1,C).
+test(C,C):Ц
+           '1'<=C,C<='2',!.
+test(_,C):Ц
+           write('Press 1 or 2!'),nl,
+           get_char(C1),
+           test(C1,C).

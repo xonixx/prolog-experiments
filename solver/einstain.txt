@@ -1,0 +1,25 @@
+domains:
+
+engl shved dat norv germ from 1 2 3 4 5;
+red green white yellow blue from 1 2 3 4 5;
+dog chicken cat loshad fish from 1 2 3 4 5;
+tea coffe milk pivo water from 1 2 3 4 5;
+pallmall dunhill marlboro winfield rothmans from 1 2 3 4 5;
+
+conditions:
+
+engl=red;
+shved=dog;
+dat=tea;
+white-green=1;
+green=coffe;
+pallmall=chicken;
+milk=3;
+yellow=dunhill;
+norv=1;
+abs(marlboro-cat)=1;
+abs(loshad-dunhill)=1;
+winfield=pivo;
+abs(norv-blue)=1;
+germ=rothmans;
+abs(marlboro-water)=1;

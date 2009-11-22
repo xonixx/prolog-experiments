@@ -1,0 +1,1 @@
+python "C:\Documents and Settings\gubarkov\Desktop\stuff\test\prolog\hlpl.py" %1 %1.html

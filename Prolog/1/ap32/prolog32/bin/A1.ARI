@@ -1,0 +1,245 @@
+
+read1(A) :-
+	read_line(0, S),
+	string_term(S, A).
+
+% do Action only if Condition, succeeds in any case
+doif(Condition, Action) :-
+	(Condition, !, Action); true.
+
+% €—€‹ ƒ€ŒŒ›
+start :- 
+	reconsult('db.pl'),
+	menu.
+
+% ‚‘Œƒ€’…‹œ›‰ …„ˆŠ€’  write 
+wr(nl) :- nl, !.
+wr(W) :- write(W), !.
+
+w([H | T]) :-
+	wr(H), w(T), !.
+w([]).
+
+% Œ…
+menu :-
+	w([nl,
+	   '----------------------------------------', nl,
+	   '|  €‡€ „€›• "€‚’‘€‹"             |', nl,
+	   '|                                      |', nl,
+	   '|  1 - ‘Œ’ €‡› „€›•            |', nl,
+	   '|  2 - „€‚‹…ˆ… ‡€ˆ‘ˆ               |', nl,
+	   '|  3 - “„€‹ˆˆ… ‡€ˆ‘ˆ                 |', nl,
+	   '|  4 - ˆ‘Š                           |', nl,
+	   '|  5 - …„€Š’ˆ‚€ˆ… ‡€ˆ‘ˆ           |', nl,
+	   '|  e - ‚›•„                           |', nl,
+	   '----------------------------------------', nl
+	   ]),
+	write('‚‚…„ˆ’… ‘‚‰ ‚›: '), 
+	read1(Choice), 
+	do(Choice), !,
+	doif(Choice \= e, % will fail on e -> menu will exit
+	     menu).
+
+% ”Œ€’ ‚›‚„€ €‡› „€›•
+%write_auto_by_id(Id) :-
+%	auto(id(Id), M, P),
+ %	write_auto(id(Id), M, P).    
+
+write_auto(auto(M, P)) :-
+	write_auto(M, P).
+	
+write_auto(model(N)) :-
+	auto(model(N, M, C, Y), P),
+	write_auto(model(N, M, C, Y), P).	
+
+write_auto(model(Name, Model, Color, Year), price(Price)) :-
+          w([ ' Œ€Š€=', Name, 
+	   ', Œ„…‹œ=', Model, 
+	   ', –‚…’=', Color,
+	   ', ƒ„=', Year,
+	   ', –…€=', Price, ';',
+	   nl
+	  ]), !.
+
+% “Š’› Œ…
+%‘Œ’
+do(1) :-
+	w([nl, '€‡€ „€›• €‚’‘€‹€', nl, nl]),
+	auto(M, P),
+	write_auto(M, P),
+	fail.
+
+do(1) :-!.
+
+%„€‚‹…ˆ… ‡€ˆ‘ˆ
+do(2) :-
+	w([nl, '„€‚‹Ÿ…Œ ‡€ˆ‘œ:', nl]),
+	write('Œ€Š€: '), read1(N),
+	write('Œ„…‹œ: '), read1(M),
+	write('–‚…’: '), read1(C),
+	write('ƒ„ ‚›“‘Š€: '), read1(Y),
+	write('–…€: '), read1(P),
+       
+       
+	assertz(auto(model(N, M, C, Y), price(P))),
+	write('‡€ˆ‘œ “‘…˜ „€‚‹…€!').
+	
+%“„€‹…ˆ… ‡€ˆ‘ˆ
+do(3) :-
+	w(['“„€‹Ÿ…Œ...', nl,
+	  '‚‚…„ˆ’… Œ€Š“ “„€‹Ÿ…ŒƒŒ €‚’Œˆ‹Ÿ ˆ‹ˆ ''e'' „‹Ÿ ‚›•„€: '
+	  ]),
+	read1(N),
+	remove_auto(N).
+
+do(e) :- write('‘•€Ÿ…Œ €‡“... '),
+	save_db,
+	retract_all(auto(_, _)),
+	write('‘•€…ˆ… “„€‹‘œ.'), nl,
+	write('„ ‘Š›• ‚‘’…—!'), !.
+
+do(4) :- search.
+
+do(5) :- 
+	w([nl,
+	   '…„€Š’ˆ“…Œ...', nl,
+	  '‚‚…„ˆ’… Œ€Š“ €‚’Œˆ‹Ÿ,‡€ˆ‘œ  Š’Œ “„…’ …„€Š’ˆ‚€’œ‘Ÿ: ']),
+	read1(N),
+	edit_auto(N).
+
+do(Other) :-
+	w(['…‚…›‰ ‚›: ', Other, '!']).
+
+% …€‹ˆ‡€–ˆŸ ˆ‘Š€
+search :-
+	w([nl, nl,
+	    '-----------------------', nl,
+	    '| ˆ‘Š:              |', nl,
+	    '|                     |', nl,
+	    '| 1 -  Œ€Š…        |', nl,
+	    '| 2 -  –‚…’“        |', nl,
+	    '| 3 -  –……         |', nl,
+	    '| e - ‚ ƒ‹€‚… Œ…  |', nl,
+	    '-----------------------', nl,
+	    '€„ —’-ˆ“„œ ‚›€’œ: '
+	   ]),
+	read1(Choice),
+	search(Choice), !,
+	doif(Choice \= e, 
+	     search).
+
+search(1) :-
+	w([nl,
+	  'ˆ‘Š  Œ€Š… Œ€˜ˆ›:', nl,
+	  '‚‚…„ˆ’… Œ€Š“: ']),
+	read1(Model),
+	search_model(Model).
+
+search(2) :-
+	w([nl,
+	  'ˆ‘Š  –‚…’“:', nl,
+	  '‚‚…„ˆ’… –‚…’: ']),
+	read1(Color),
+	search_color(Color).       
+
+search(3) :-
+	w([nl,
+	  'ˆ‘Š  –……:', nl, 
+	  'ˆ‘Š €‚’Œˆ‹…‰ „…˜…‚‹… “Š€‡€‰ ‚€Œˆ –…›: ']),
+	read1(Price),
+	search_price(Price).
+
+search(e) :- write('‚‡‚€™€…Œ‘Ÿ...').
+
+str_contains(S, S1) :-
+	string_search(S1, S, _), !.
+
+search_model(Name) :-
+	write('***€‰„…***:'), nl,
+	auto(model(N, M, C, Y), P),
+	str_contains(N, Name),
+	write_auto(model(N, M, C, Y), P),
+	fail.
+search_model(_).
+
+search_color(Color) :-
+	write('***€‰„…***:'), nl,
+	auto(model(N, M, C, Y), Price),
+	str_contains(C, Color),
+	write_auto(model(N, M, C, Y), Price),
+	fail.
+search_color(_).
+
+
+search_price(Price) :-
+	write('***€‰„…***:'), nl,
+	auto(Model, price(P)),
+	P =< Price,
+	write_auto(Model, price(P)),
+	fail.
+search_price(_).	
+
+% …„ˆŠ€’› „‹Ÿ “„€‹…ˆŸ
+remove_auto(e) :-!.
+remove_auto(N) :-
+	retract(auto(model(N, _, _, _), price(_))),
+	w(['€‚’Œˆ‹œ ', N, ' “„€‹….', nl]).
+
+remove_auto(N) :-
+	w(['€‚’Œˆ‹Ÿ ', N, ' …’ ‚ €‡…!', nl,
+	  '‚’ˆ’… ‡€‘ ˆ‹ˆ €†Œˆ’… ''e'' „‹Ÿ ‚‡‚€’€ ‚ Œ…: ']),
+	read1(NewN),
+	remove_auto(NewN).
+
+% …„ˆŠ€’› „‹Ÿ …„€Š’ˆ‚€ˆŸ
+edit_auto(e) :-!.
+edit_auto(N) :-
+	auto(model(N, M, C, Y), price(P)),
+	write_auto(model(N)),
+	w([nl,
+	   '--------------------', nl,
+	   '| ˆ‡Œ……ˆ…:       |', nl,
+	   '|                  |', nl,
+	   '| 1 - –…›         |', nl,
+	   '| 2 - –‚…’€        |', nl,
+	   '--------------------', nl,
+	   '€„ —’-ˆ“„œ ‚›€’œ: '
+	  ]),
+	read1(Choice),
+	do_edit_auto(Choice, auto(model(N, M, C, Y), price(P))), !,
+	write('ˆ‡Œ…E: '), nl,
+      write_auto(model(N)).
+	
+edit_auto(N) :-
+	w(['€‚’Œˆ‹Ÿ Œ€Šˆ', N, ' …’ ‚ €‡…!', nl,
+	  '‚’ˆ’… ‡€‘ ˆ‹ˆ €†Œˆ’… ''e'' „‹Ÿ ‚‡‚€’€ ‚ Œ…:  ']),
+	read1(NewN),
+	edit_auto(NewN).
+
+do_edit_auto(1, auto(model(N, M, C, Y), price(P))) :-
+	write('‚‚…„ˆ’… ‚“ –…“: '),
+	read1(NewPrice),
+	retract(auto(model(N, _, _, _), price(_))),
+	assert(auto(model(N, M, C, Y), price(NewPrice))).
+
+do_edit_auto(2, auto(model(Name, Model, _, Year), P)) :-
+	write('‚‚…„ˆ’… ‚›‰ –‚…’: '),
+	read1(NewColor),
+	retract(auto(model(Name, Model, _, Year), P)),
+	assert(auto(model(Name, Model, NewColor, Year), P)).
+
+do_edit_auto(_, _) :-
+	write('…‚…›‰ ‚›!').
+
+% ‘•€…ˆ… ‚ ”€‰‹ €‡› „€›•
+save_db :-
+	tell('db.pl'),
+	listing(auto),
+	told.
+
+% —ˆ™…ˆ… „ˆ€Œˆ—…‘Š‰ €ŒŸ’ˆ
+retract_all(Fact):- retract(Fact),
+                   fail.
+retract_all(_).
+
+    

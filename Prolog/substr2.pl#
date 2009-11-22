@@ -1,0 +1,11 @@
+
+% S - все подстроки Str
+substr(S, Str) :-
+	concat(_, S1, Str),
+	concat(S, _, S1).
+
+% S
+substr2(S2, Str) :-
+	substr(S2, Str),
+	atom_length(S2, 2).
+	

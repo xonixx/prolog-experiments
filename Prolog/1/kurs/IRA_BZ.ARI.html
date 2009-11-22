@@ -1,0 +1,166 @@
+zap(v($БоРисевич$,$Леонид$,$Олегович     $),y($17$,$07$,$1984$),t($72127$),a($ПаРковая 18-95$)).
+zap(v($ГРушан$,$МаРгаРита$,$АлександРовна$),y($08$,$04$,$1979$),t($43214$),a($ФоРты 20-21$)).
+zap(v($МоРозова$,$Наталья$,$АлександРовна$),y($15$,$02$,$1980$),t($48890$),a($Молодежная 12-44$)).
+zap(v($ОндРин$,$АлександР$,$ВалеРьевич   $),y($10$,$10$,$1985$),t($35301$),a($ЛенингРадская 3-38$)).
+zap(v($Соков$,$Антон$,$Яковлевич         $),y($01$,$07$,$1983$),t($36049$),a($Молодежная 26-21$)).
+zap(v($Степанов$,$ВиктоР$,$ВладимиРович  $),y($10$,$10$,$1985$),t($49930$),a($ЛенингРадская 6-14$)).
+zap(v($Шульгина$,$Елена$,$ВиктоРовна     $),y($08$,$11$,$1979$),t($43214$),a($ФоРты 25-21$)).
+
+start:-reconsult('fonspr.db'),
+       menu.
+start:-menu.       
+
+menu:-cls,nl,
+      write('                    База знаний "Телефонный спРавочник"'    ),nl,
+      write('        	    1 - ПРосмотР содеРжимого базы данных'        ),nl,
+      write('        	    2 - Добавление записи'                       ),nl,
+      write('        	    3 - Удаление записи'                         ),nl,
+      write('		    4 - Поиск'				         ),nl,
+      write('		    5 - Изменение фамилии'                       ),nl,      
+      write('		    6 - Изменение номеРа телефона'               ),nl,      
+      write('		    7 - Изменение адРеса пРоживания'             ),nl,
+      write('        	    8 - Выход'                                   ),nl,
+write('Введите ваш выбоР: '),read_line(0,X),do(X).
+
+do($1$):-nl,
+write('        ФИО                    дата Рожд.  н.телефона       адРес'),nl,         
+    zap(v(F,I,O),y(D,M,G),t(N),a(H)),
+    write(F),write(' '),write(I),write(' '),write(O),write('  '),
+    write(D),write('.'),write(M),write('.'),write(G),write('  '),
+    write('тел.'),write(N),write('  '),write('ул.'),
+    write(H),write(' '),
+    nl,fail.
+do($1$):-get0_noecho(X),menu.
+
+do($2$):-write('Введите следующие данные: '),nl,
+         write('Фамилия: '),read_line(0,F),
+         write('Имя: '),read_line(0,I),
+         write('Отчество: '),read_line(0,O),
+         write('День Рождения: '),read_line(0,D),
+         write('Месяц Рождения: '),read_line(0,M),
+         write('Год Рождения: '),read_line(0,G),
+         write('НомеР телефона: '),read_line(0,N),
+         write('Название адРес пРоживания: '),read_line(0,H),
+         write('Добавляем запись: '),
+         write(F),write(' '),write(I),write(' '),write(O),write('  '),
+         write(D),write('.'),write(M),write('.'),write(G),write('  '),
+         write('тел.'),write(N),write('  '),write('ул.'),
+         write(H),write(' '),
+         assertz(zap(v(F,I,O),y(D,M,G),t(N),a(H))),menu.
+
+do($3$):-write('Введите фамилию: '),read_line(0,F),
+         retract(zap(v(F,_,_),y(_,_,_),t(_),a(_))),menu.
+do($3$):-write('Такой фамилии нет'),get0_noecho(X),menu.       
+
+do($4$):-cls,nl,
+         write('              1 - Поиск по фамилии'),nl,
+         write('              2 - Поиск по имени и отчеству'),nl,
+         write('              3 - Поиск по дате Рождения'),nl,
+         write('              4 - Поиск по номеРу телефона'),nl,
+         write('              5 - Поиск по адРесу'),nl,
+         write('              6 - РасшиРенный поиск'),nl,         
+         write('              7 - Выход в главное меню'),nl,
+         write('Введите ваш выбоР: '),read_line(0,Y),run(Y).
+         
+run($1$):-write('Введите фамилию: '),read_line(0,F),
+        zap(v(F,I,O),y(D,M,G),t(N),a(H)),
+        write(F),write(' '),write(I),write(' '),write(O),write('  '),
+        write(D),write('.'),write(M),write('.'),write(G),write('  '),
+        write('тел.'),write(N),write('  '),write('ул.'),
+        write(H),write(' '),
+        get0_noecho(X),do($4$).
+
+run($2$):-write('Введите имя: '),read_line(0,I),
+        write('Введите отчество: '),read_line(0,O),
+        zap(v(F,I,O),y(D,M,G),t(N),a(H)),
+        write(F),write(' '),write(I),write(' '),write(O),write('  '),
+        write(D),write('.'),write(M),write('.'),write(G),write('  '),
+        write('тел.'),write(N),write('  '),write('ул.'),
+        write(H),write(' '),
+        get0_noecho(X),do($4$).   
+
+run($3$):-write('Введите день Рождения: '),read_line(0,D),
+        write('Введите месяц Рождения: '),read_line(0,M),
+        write('Введите год Рождения: '),read_line(0,G),
+        zap(v(F,I,O),y(D,M,G),t(N),a(H)),
+        write(F),write(' '),write(I),write(' '),write(O),write('  '),
+        write(D),write('.'),write(M),write('.'),write(G),write('  '),
+        write('тел.'),write(N),write('  '),write('ул.'),
+        write(H),write(' '),
+        get0_noecho(X),do($4$).   
+
+run($4$):-write('Введите номеР телефона: '),read_line(0,N),
+        zap(v(F,I,O),y(D,M,G),t(N),a(H)),
+        write(F),write(' '),write(I),write(' '),write(O),write('  '),
+        write(D),write('.'),write(M),write('.'),write(G),write('  '),
+        write('тел.'),write(N),write('  '),write('ул.'),
+        write(H),write(' '),
+        get0_noecho(X),do($4$).
+
+run($5$):-write('Введите адРес пРоживания: '),read_line(0,H),
+        zap(v(F,I,O),y(D,M,G),t(N),a(H)),
+        write(F),write(' '),write(I),write(' '),write(O),write('  '),
+        write(D),write('.'),write(M),write('.'),write(G),write('  '),
+        write('тел.'),write(N),write('  '),write('ул.'),
+        write(H),write(' '),
+        get0_noecho(X),do($4$).   
+
+run($6$):-write('Введите фамилию:'),read_line(0,F),
+        write('Введите неполный адРес:'),read_line(0,J),
+        zap(v(F,I,O),y(D,M,G),t(N),a(H)),ros(J,H),
+        write(F),write(' '),write(I),write(' '),write(O),write('  '),
+        write(D),write('.'),write(M),write('.'),write(G),write('  '),
+        write('тел.'),write(N),write('  '),write('ул.'),
+        write(H),write(' '),nl,fail.
+run($6$):-get0_noecho(X),do($4$).           
+
+run($7$):-menu.              
+
+do($5$):- write('Введите стаРую фамилию: '),read_line(0,F),
+          zap(v(F,I,O),y(D,M,G),t(N),a(H)),
+          write('Найдена следующая запись: '),
+	  write(F),write(' '),write(I),write(' '),write(O),write('  '),
+	  write(D),write('.'),write(M),write('.'),write(G),write('  '),
+	  write('тел.'),write(N),write('  '),write('ул.'),
+          write(H),write(' '),nl,
+          write('Введите новую фамилию: '),read_line(0,F1),
+          retract(zap(v(F,_,_),y(_,_,_),t(_),a(_))),
+          assert(zap(v(F1,I,O),y(D,M,G),t(N),a(H))),menu.
+do($5$):-write('Такой фамилии нет'),get0_noecho(X),menu.       
+
+do($6$):- write('Введите стаРый номеР: '),read_line(0,N),
+          zap(v(F,I,O),y(D,M,G),t(N),a(H)),
+          write('Найдена следующая запись: '),
+	  write(F),write(' '),write(I),write(' '),write(O),write('  '),
+	  write(D),write('.'),write(M),write('.'),write(G),write('  '),
+	  write('тел.'),write(N),write('  '),write('ул.'),
+          write(H),write(' '),nl,
+          write('Введите новый номеР: '),read_line(0,N1),
+          retract(zap(v(_,_,_),y(_,_,_),t(N),a(_))),
+          assert(zap(v(F,I,O),y(D,M,G),t(N1),a(H))),menu.
+do($6$):-write('Такого номеРа нет'),get0_noecho(X),menu.
+
+do($7$):- write('Введите стаРый адРес: '),read_line(0,H),
+          zap(v(F,I,O),y(D,M,G),t(N),a(H)),
+          write('Найдена следующая запись: '),
+	  write(F),write(' '),write(I),write(' '),write(O),write('  '),
+	  write(D),write('.'),write(M),write('.'),write(G),write('  '),
+	  write('тел.'),write(N),write('  '),write('ул.'),
+          write(H),write(' '),nl,
+          write('Введите новый адРес: '),read_line(0,H1),
+          retract(zap(v(_,_,_),y(_,_,_),t(_),a(H))),
+          assert(zap(v(F,I,O),y(D,M,G),t(N),a(H1))),menu.
+do($7$):-write('Такого адРеса нет'),get0_noecho(X),menu.     
+
+do($8$):- save('fonspr.db'),
+          retractall(_),
+          write('                БАЗА СОХРАНЕНА В ФАЙЛ FONSPR.DB'), nl,
+          write('                СПАСИБО ЗА РАБОТУ С ПРОГРАММОЙ'). 
+     
+ros($$,H):-!.
+ros(W,H):-string_length(W,L),substring(W,0,1,G),
+          string_search(G,H,I),L1 is L-1,substring(W,1,L1,Q),!,ros(Q,H).           
+
+retractall(Fact):- retract(Fact),
+                   fail.
+retractall(_).

@@ -1,0 +1,23 @@
+/*  XPCE configuration file for "persistent_frame"
+    Saved Mon Jul 02 04:05:17 2007 by Vovan
+*/
+
+configversion(1).
+[persistent_frame].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Option lines starting with a `%' indicate      %
+% the value is equal to the application default. %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+/* (X-)geometry for persistent frames */
+history/geometry/pui_manual =   '1272x839+0+37'.
+history/geometry/man_class_browser = '1050x369+104-89'.
+history/geometry/man_statistics = '308x144+177+203'.
+history/geometry/man_card_editor = '667x294+77+226'.
+history/geometry/man_module_browser = '662x298+37-184'.
+history/geometry/'XPCE Demo Programs' = '452x218+57-234'.
+history/geometry/man_manual =   '+25+160'.
+
+/* Sub-window layout for persistent frames */
+history/subwindow_layout/pui_manual = layout(*, [*, layout(*, [378, *]), *]).

@@ -1,0 +1,8 @@
+domains:
+a b c d e f g h from 1 2 3 4 5 6 7 8;
+conditions:
+a+h=b;
+2*g=c;
+3*d=h;
+d+f=a+g;
+c+e=11;
