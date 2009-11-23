@@ -1,0 +1,153 @@
+Welcome to SWI-Prolog (Multi-threaded, 32 bits, Version 5.7.4)
+Copyright (c) 1990-2008 University of Amsterdam.
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software,
+and you are welcome to redistribute it under certain conditions.
+Please visit http://www.swi-prolog.org for details.
+
+For help, use ?- help(Topic). or ?- apropos(Word).
+
+1 ?- X=format('X=~w,X.',[X]),X.
+X=format(X=~w,X., [**]),X.
+X = format('X=~w,X.', [**]).
+
+2 ?- X=format('X=''~w'',X.',[X]),X.
+X='format(X='~w',X., [**])',X.
+X = format('X=\'~w\',X.', [**]).
+
+3 ?- X=format('''X=~w,X.''',[X]),X.
+'X=format('X=~w,X.', [**]),X.'
+X = format('\'X=~w,X.\'', [**]).
+
+4 ?- X=format('X=format()'),X.
+X=format()
+X = format('X=format()').
+
+5 ?- Y='format()',X=format(Y),X.
+format()
+Y = 'format()',
+X = format('format()').
+
+6 ?- X=format('X=~w,X.',[X]),X.
+X=format(X=~w,X., [**]),X.
+X = format('X=~w,X.', [**]).
+
+7 ?- X=(S=X,write(S)),X.
+** = **, write(**)
+X = (** = **, write(**)),
+S = (** = **, write(**)).
+
+8 ?- help(copy_term).
+true.
+
+9 ?- copy_term(a(A),B).
+B = a(_G374).
+
+10 ?- X=(copy_term(X,S),format('X=~w',[S])),X.
+X=copy_term(**, _G551), format(X=~w, [_G551])
+X = (copy_term(**, (copy_term(**, _G551), format('X=~w', [_G551]))), format('X=~w', [ (copy_term(**, _G551), format('X=~w', [_G551]))])),
+S = (copy_term(**, _G551), format('X=~w', [_G551])).
+
+11 ?- X='format(',format(X).
+format(
+X = 'format('.
+
+12 ?- X='X=format(',format(X).
+X=format(
+X = 'X=format('.
+
+13 ?- X='X=''format(',format(X).
+X='format(
+X = 'X=\'format('.
+
+14 ?- X=format('X=~w,X.',[Y]),copy_term(X,Y),X.
+X=format(X=~w,X., [_G574]),X.
+X = format('X=~w,X.', [format('X=~w,X.', [_G574])]),
+Y = format('X=~w,X.', [_G574]).
+
+15 ?- X=format('X=~w,X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format(X=~w,X., [Y]),X.
+X = format('X=~w,X.', [format('X=~w,X.', ['Y'])]),
+Y = format('X=~w,X.', ['Y']).
+
+16 ?- X=format('X=~w,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format(X=~w,copy_term(X,Y),Y=format(_,['Y']),X., [Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~w,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~w,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~w,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+17 ?- help(format).
+true.
+
+18 ?- help(format/2).
+true.
+
+19 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+20 ?- X=format('X=~p,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format(X=~p,copy_term(X,Y),Y=format(_,['Y']),X., [Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~p,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~p,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~p,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+21 ?- X=format('X=~a,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=
+ERROR: format/2: Illegal argument to format sequence ~a: format(X=~a,copy_term(X,Y),Y=format(_,['Y']),X., [Y])
+22 ?- X=format('X=~s,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=
+ERROR: format/2: Illegal argument to format sequence ~s: format(X=~s,copy_term(X,Y),Y=format(_,['Y']),X., [Y])
+23 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+24 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+25 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+26 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [Y]),copy_term(X,Y),Y=format(_,[y]),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [y])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [y]).
+
+27 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+28 ?- help(var).
+true.
+
+29 ?- apropos(var).
+true.
+
+30 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+31 ?- X=format('X=~w,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format(X=~w,copy_term(X,Y),Y=format(_,['Y']),X., [Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~w,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~w,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~w,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+32 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+33 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[''Y'']),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']),copy_term(X,Y),Y=format(_,['Y']),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y'])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[\'Y\']),X.', ['Y']).
+
+34 ?- X=format('X=~q,copy_term(X,Y),Y=format(_,[Y]),X.',[Y]),copy_term(X,Y),Y=format(_,['Y']),X.
+X=format('X=~q,copy_term(X,Y),Y=format(_,[Y]),X.', ['Y']),copy_term(X,Y),Y=format(_,[Y]),X.
+X = format('X=~q,copy_term(X,Y),Y=format(_,[Y]),X.', [format('X=~q,copy_term(X,Y),Y=format(_,[Y]),X.', ['Y'])]),
+Y = format('X=~q,copy_term(X,Y),Y=format(_,[Y]),X.', ['Y']).
