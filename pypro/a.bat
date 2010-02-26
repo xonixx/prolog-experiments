@@ -1,0 +1,1 @@
+python a.py | "C:\Program Files\SWI-Prolog\bin\plcon" -f a.pro -q -g "s, halt."
