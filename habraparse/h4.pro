@@ -51,6 +51,7 @@ lexem(/) --> "/".
 
 add_all(T1, [op_term(Op, T2)| T], R) :-
 	T3 =.. [Op, T1, T2],
+	!,
 	add_all(T3, T, R).
 add_all(R, [], R).
 
