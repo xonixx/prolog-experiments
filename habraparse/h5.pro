@@ -27,7 +27,7 @@ lex([H | T]) -->
 	lexem(H), !,
 	lex(T).
 
-lex([]) --> 
+lex([]) -->
 	[].
 
 lexem(N) --> integer(N).
@@ -45,7 +45,8 @@ lexem(/) --> "/".
 /*
  <expr> --> <term> ( '+' <term> | '-' <term> )*
  <term> --> <factor> ( '*'  <factor> | '/'  <factor> )*
- <factor> --> <prime> | '(' <expr> ')' | '-' <factor> | '+' <factor>
+ <factor> --> <power> | '(' <expr> ')' | '-' <factor> | '+' <factor>
+ <power> --> <prime> | <expr> '^' <expr>
  <prime> --> ( '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' )+
 */
 
@@ -57,7 +58,7 @@ add_all(R, [], R).
 
 expr(E) --> term(T1), plus_minus_terms(Terms), {add_all(T1, Terms, E)}.
 
-plus_minus_terms([op_term(Op, T1) | T]) --> plus_minus(Op), term(T1), plus_minus_terms(T), !.
+plus_minus_terms([op_term(Op, T1) | T]) --> plus_minus(Op), term(T1), !, plus_minus_terms(T).
 plus_minus_terms([]) --> [].
 
 plus_minus(+) --> [+].
@@ -65,14 +66,14 @@ plus_minus(-) --> [-].
 
 term(T) --> factor(F1), mul_div_factors(Factors), {add_all(F1, Factors, T)}.
 
-mul_div_factors([op_term(Op, F1) | T]) --> mul_div(Op), factor(F1), mul_div_factors(T), !.
+mul_div_factors([op_term(Op, F1) | T]) --> mul_div(Op), factor(F1), !, mul_div_factors(T).
 mul_div_factors([]) --> [].
 
 mul_div(*) --> [*].
 mul_div(/) --> [/].
 
-factor(E) --> [open], expr(E), [close], !.
-factor(N) --> [N], {number(N)}, !.
+factor(E) --> [open], expr(E), [close].
+factor(N) --> [N], {number(N)}.
 factor(I) --> [I], {atom(I)}.
 
 
