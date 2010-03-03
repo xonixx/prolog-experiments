@@ -105,10 +105,15 @@ parse(Str, Expr) :-
 %tst
 %
 
-n(N) --> {N>0}, "+1", !, {N1 is N - 1}, n(N1). 
+n(N) --> {N>0}, "+1", !, {N1 is N - 1}, n(N1).
 n(0) --> [].
 
 tst(N, Res) :- phrase(n(N),S), parse(S, R), Res is R.
 
-
+e(N, E) :-
+	N > 0,
+	E = E1 + 1,
+	N1 is N - 1,
+	e(N1, E1).
+e(0, 1).
 
