@@ -62,7 +62,7 @@ add_all_right(R, [], R).
  <expr> --> <term> ( '+' <term> | '-' <term> )*
  <term> --> <factor> ( '*'  <factor> | '/'  <factor> )*
  <factor> --> <pwr> ( '^' <pwr> )*
- <pwr> --> <prime> | '(' <expr> ')'
+ <pwr> --> <prime> | '(' <expr> ')' | '-' <factor> | '+' <factor>
  <prime> --> ( '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' )+
 */
 
@@ -93,7 +93,7 @@ pwr_op(^) --> [^].
 
 pwr(E) --> [open], expr(E), [close].
 pwr(N) --> [N], {number(N)}.
-pwr(I) --> [I], {atom(I)}.
+pwr(F) --> plus_minus(Op), factor(F0), {F =.. [Op, F0]}.
 
 
 parse(Str, Expr) :-
