@@ -108,7 +108,7 @@ parse(Str, Expr) :-
 n(N) --> {N>0}, "+1", !, {N1 is N - 1}, n(N1).
 n(0) --> [].
 
-tst(N, Res) :- phrase(n(N),S), parse(S, R), Res is R.
+tst(N, Res) :- phrase(n(N),S), parse(S, R), /*Res is R*/c(R, Res).
 
 e(N, E) :-
 	N > 0,
