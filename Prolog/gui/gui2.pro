@@ -1,19 +1,21 @@
-
+п»ї
 
 start :-
-	new(D, dialog('Сумма двух чисел')),
+	new(D, dialog('РЎСѓРјРјР° РґРІСѓС… С‡РёСЃРµР»')),
 	send_list(D, append,
 		  [
-		   new(T1, text_item('Первое число')),
-		   new(T2, text_item('Второе число')),
-		   new(Ts, text_item('Сумма')),
-		   button('Сложить',
+		   new(T1, text_item('РџРµСЂРІРѕРµ С‡РёСЃР»Рѕ')),
+		   new(T2, text_item('Р’С‚РѕСЂРѕРµ С‡РёСЃР»Рѕ')),
+		   label('РЎСѓРјРјР°', 'РЎСѓРјРјР°:'),
+		   new(Ts, label('РЎСѓРјРјР°', 'qqq')),
+		   button('РЎР»РѕР¶РёС‚СЊ',
 			  message(@prolog,
 				  do_add,
 				  T1,T2,Ts)),
-		   button('Выход',
+		   button('Р’С‹С…РѕРґ',
 			  message(D, destroy))
 		  ]),
+	send(D, center, Ts?right),
 	send(D, open).
 
 do_add(T1, T2, Ts) :-
