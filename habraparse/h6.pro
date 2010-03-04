@@ -1,36 +1,26 @@
-%
-% helpful
-%
 
-integer(I) -->
-        digit(D0),
-        digits(D),
-        { number_chars(I, [D0|D])
-        }.
-
-digits([D|T]) -->
-        digit(D), !,
-        digits(T).
-digits([]) -->
-        [].
-
-digit(D) -->
-        [D],
-        { code_type(D, digit)
-        }.
+:- use_module(library(http/dcg_basics)).
 
 %
 % lexer
 %
 
 lex([H | T]) -->
-	lexem(H), !,
+	lexem_t(H), !,
 	lex(T).
 
 lex([]) -->
 	[].
 
-lexem(N) --> integer(N).
+lexem_t(L) --> trash, lexem(L), trash.
+
+trash --> whites.
+
+hex_start --> "0X".
+hex_start --> "0x".
+
+lexem(N) --> hex_start, !, xinteger(N). % this handles hex numbers
+lexem(N) --> number(N). % this handles integers/floats
 lexem(open) --> "(".
 lexem(close) --> ")".
 lexem(+) --> "+".
