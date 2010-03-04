@@ -12,9 +12,19 @@ lex([H | T]) -->
 lex([]) -->
 	[].
 
-lexem_t(L) --> trash, lexem(L), trash.
+lexem_t(L) --> trashes, lexem(L), trashes.
 
-trash --> whites.
+trashes --> trash, !, trashes.
+trashes --> [].
+
+trash --> comment_marker(End), !, ..., End.
+trash --> white.
+
+comment_marker("*)") --> "(*".
+comment_marker("*/") --> "/*".
+
+... --> [].
+... --> [_], !, (...).
 
 hex_start --> "0X".
 hex_start --> "0x".
@@ -94,6 +104,11 @@ parse(Str, Expr) :-
 %
 %tst
 %
+
+test :-
+	parse("   142 /* some cool comment /*??? /* yo! */ - 0x2A \t\t  + 1.6e+3\t ^ ((2 -(* some other comment 1/0 *) 1)*0.5)  \t",R),
+	Res is R,
+	format("Parsed expression is:~n~w~n~nResult is:~n~w", [R, Res]).
 
 n(N) --> {N>0}, "+1", !, {N1 is N - 1}, n(N1).
 n(0) --> [].
