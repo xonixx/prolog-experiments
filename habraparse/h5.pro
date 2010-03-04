@@ -117,3 +117,10 @@ e(N, E) :-
 	e(N1, E1).
 e(0, 1).
 
+
+c(A+B, R) :- c(A, Ra), c(B, Rb), !, R is Ra + Rb.
+c(A-B, R) :- c(A, Ra), c(B, Rb), !, R is Ra - Rb.
+c(A*B, R) :- c(A, Ra), c(B, Rb), !, R is Ra * Rb.
+c(A/B, R) :- c(A, Ra), c(B, Rb), !, R is Ra / Rb.
+c(A^B, R) :- c(A, Ra), c(B, Rb), !, R is Ra ^ Rb.
+c(A, A).
