@@ -2,6 +2,24 @@
 :- use_module(library(http/dcg_basics)).
 
 %
+% helpful
+%
+/*
+ointeger(Val) -->
+	digit(D0),
+	digits(D),
+	{ mkval([D0|D], 8, Val)
+	}.
+
+mkval([W0|Weights], Base, Val) :-
+	mkval(Weights, Base, W0, Val).
+
+mkval([], _, W, W).
+mkval([H|T], Base, W0, W) :-
+	W1 is W0*Base+H,
+	mkval(T, Base, W1, W).
+*/
+%
 % lexer
 %
 
@@ -29,8 +47,10 @@ comment_marker("*/") --> "/*".
 hex_start --> "0X".
 hex_start --> "0x".
 
-lexem(N) --> hex_start, !, xinteger(N). % this handles hex numbers
-lexem(N) --> number(N). % this handles integers/floats
+/*
+oct_start --> "0O".
+oct_start --> "0o".
+*/
 lexem(open) --> "(".
 lexem(close) --> ")".
 lexem(+) --> "+".
@@ -38,6 +58,10 @@ lexem(-) --> "-".
 lexem(*) --> "*".
 lexem(/) --> "/".
 lexem(^) --> "^".
+
+lexem(N) --> hex_start, !, xinteger(N). % this handles hex numbers
+lexem(N) --> number(N). % this handles integers/floats
+%lexem(N) --> oct_start, !, ointeger(N). % this handles oct numbers
 
 %
 % parser
@@ -105,15 +129,24 @@ parse(Str, Expr) :-
 %tst
 %
 
-test :-
-	parse("   142 /* some cool comment /*??? /* yo! */ - 0x2A \t\t  + 1.6e+3\t ^ ((2 -(* some other comment 1/0 *) 1)*0.5)  \t",R),
+test(S) :-
+	format('~n-------~nInput string is:~n~s~n~n', [S]),
+	parse(S, R),
 	Res is R,
-	format("Parsed expression is:~n~w~n~nResult is:~n~w", [R, Res]).
+	format('Parsed expression is:~n~w~n~nResult is:~n~w', [R, Res]).
+tests :-
+	forall(member(S, [
+			  "   142 /* some cool comment /*??? /* yo! */ - 0x2A \t\t  + 1.6e+3\t ^ ((2 -(* some other comment 1/0 *) 1)*0.5)  \t",
+			  "1000000+1000000+1000000+1000000+1000000+1000000+1000000+10000000+1000000+1000000"
+			 ]), test(S)).
 
-n(N) --> {N>0}, "+1", !, {N1 is N - 1}, n(N1).
-n(0) --> [].
+tests1(N, Res) :-
+   phrase(n(N, "+1000000"),S1), /*test(S1)*/parse(S1,R), Res is R.
 
-tst(N, Res) :- phrase(n(N),S), parse(S, R), /*Res is R*/c(R, Res).
+n(N, S) --> {N>0}, S, !, {N1 is N - 1}, n(N1, S).
+n(0, _) --> [].
+
+tst(N, Res) :- phrase(n(N, "+1"),S), parse(S, R), /*Res is R*/c(R, Res).
 
 e(N, E) :-
 	N > 0,
