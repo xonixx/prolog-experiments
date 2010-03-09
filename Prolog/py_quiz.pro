@@ -30,7 +30,6 @@ m_to_f([], [F], F).
 all_formulas(Nums, Formula) :-
 	Ops = [+,-,*,/],
 	permutation(Nums, NumsP),
-	%permutation(Ops, OpsP),
 	OpsP = [Op1, Op2, Op3],
 	member(Op1, Ops),
 	member(Op2, Ops),
