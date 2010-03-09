@@ -15,10 +15,7 @@ merge([], _, Res, _, Res).
 
 merged_to_formula(Merged, Formula) :-
 	reverse(Merged,Reversed),
-	merged_to_formula0(Reversed, Formula).
-
-merged_to_formula0(L, F) :-
-	m_to_f(L, [], F).
+	m_to_f(Reversed, [], Formula).
 
 m_to_f([H | T], S, F) :-
 	(   memberchk(H, [+,-,*,/])
@@ -27,18 +24,28 @@ m_to_f([H | T], S, F) :-
 	).
 m_to_f([], [F], F).
 
+all_ops([Op | Ops]) :-
+	member(Op, [+,-,*,/]),
+	all_ops(Ops).
+all_ops([]).
+
 all_formulas(Nums, Formula) :-
-	Ops = [+,-,*,/],
 	permutation(Nums, NumsP),
-	OpsP = [Op1, Op2, Op3],
-	member(Op1, Ops),
-	member(Op2, Ops),
-	member(Op3, Ops),
+
+	length(Nums,N),
+	NOps is N - 1,
+
+	length(OpsP, NOps),
+	all_ops(OpsP),
+
 	merge(NumsP, OpsP, Merged),
 	merged_to_formula(Merged, Formula).
 
-solve(FF) :-
-	findall(F,
-		(   all_formulas([1,3,4,6], F),
-		    catch(F=:=24, _, fail)
-		), FF).
+solve(Nums, Res, F) :-
+	all_formulas(Nums, F),
+	catch(F=:=Res, _, fail). % zero division
+
+solve_all(Nums, Res, FF) :-
+	setof(F,solve(Nums, Res, F), FF).
+
+solve(FF) :- solve_all([1,3,4,6],24,FF).
