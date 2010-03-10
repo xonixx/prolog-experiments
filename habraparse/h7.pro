@@ -2,24 +2,6 @@
 :- use_module(library(http/dcg_basics)).
 
 %
-% helpful
-%
-/*
-ointeger(Val) -->
-	digit(D0),
-	digits(D),
-	{ mkval([D0|D], 8, Val)
-	}.
-
-mkval([W0|Weights], Base, Val) :-
-	mkval(Weights, Base, W0, Val).
-
-mkval([], _, W, W).
-mkval([H|T], Base, W0, W) :-
-	W1 is W0*Base+H,
-	mkval(T, Base, W1, W).
-*/
-%
 % lexer
 %
 
@@ -47,10 +29,6 @@ comment_marker("*/") --> "/*".
 hex_start --> "0X".
 hex_start --> "0x".
 
-/*
-oct_start --> "0O".
-oct_start --> "0o".
-*/
 lexem(open) --> "(".
 lexem(close) --> ")".
 lexem(+) --> "+".
@@ -61,26 +39,10 @@ lexem(^) --> "^".
 
 lexem(N) --> hex_start, !, xinteger(N). % this handles hex numbers
 lexem(N) --> number(N). % this handles integers/floats
-%lexem(N) --> oct_start, !, ointeger(N). % this handles oct numbers
 
 %
 % parser
 %
-
-% aggregate
-add_all(T1, [op_term(Op, T2)| T], R) :-
-	T3 =.. [Op, T1, T2],
-	!,
-	add_all(T3, T, R).
-add_all(R, [], R).
-
-add_all_right(T1, [op_term(Op, T2)| T], R) :-
-	add_all_right(T2, T, R1),
-	!,
-	R =.. [Op, T1, R1].
-add_all_right(R, [], R).
-% end aggregate
-
 
 /*
  <expr> --> <term> ( '+' <term> | '-' <term> )*
@@ -92,38 +54,39 @@ add_all_right(R, [], R).
 
 % grammar
 
-expr(E) --> term(T1), !, plus_minus_terms(Terms), {add_all(T1, Terms, E)}.
+expr(Res) --> term(T), !, plus_minus_terms(T, Res).
 
-plus_minus_terms([op_term(Op, T1) | T]) --> plus_minus(Op), term(T1), !, plus_minus_terms(T).
-plus_minus_terms([]) --> [].
+plus_minus_terms(T, Res) --> plus_minus(Op), !, term(T1), {Op=(+)->T2 is T+T1;T2 is T-T1}, !, plus_minus_terms(T2, Res).
+plus_minus_terms(T, T) --> [].
 
 plus_minus(+) --> [+].
 plus_minus(-) --> [-].
 
-term(T) --> factor(F1), !, mul_div_factors(Factors), {add_all(F1, Factors, T)}.
+term(Res) --> factor(F), !, mul_div_factors(F, Res).
 
-mul_div_factors([op_term(Op, F1) | T]) --> mul_div(Op), factor(F1), !, mul_div_factors(T).
-mul_div_factors([]) --> [].
+mul_div_factors(F, Res) --> mul_div(Op), !, factor(F1), {Op=(*)->F2 is F*F1;F2 is F/F1}, !, mul_div_factors(F2, Res).
+mul_div_factors(F, F) --> [].
 
 mul_div(*) --> [*].
 mul_div(/) --> [/].
 
-factor(F) --> pwr(P), !, pwrs(PP), {add_all_right(P, PP, F)}.
+factor(F) --> pwr(P), !, pwrs(PP), {F is P^PP}.
 
-pwrs([op_term(Op, T1) | T]) --> pwr_op(Op), pwr(T1), !, pwrs(T).
-pwrs([]) --> [].
+pwrs(Res) --> pwr_op, pwr(T1), !, pwrs(T), {Res is T1^T}.
+pwrs(1) --> [].
 
-pwr_op(^) --> [^].
+pwr_op --> [^].
 
 pwr(E) --> [open], expr(E), [close].
 pwr(N) --> [N], {number(N)}.
-pwr(F) --> plus_minus(Op), factor(F0), {F =.. [Op, F0]}.
+pwr(R) --> plus_minus(Op), factor(F0), {F =.. [Op, F0], R is F}.
 
 
 parse(Str, Expr) :-
+	writeln(1),
 	phrase(lex(Lexems), Str),
+	writeln(2),
 	phrase(expr(Expr), Lexems).
-
 
 %
 %tst
@@ -146,7 +109,7 @@ tests1(N, Res) :-
 n(N, S) --> {N>0}, S, !, {N1 is N - 1}, n(N1, S).
 n(0, _) --> [].
 
-tst(N, Res) :- phrase(n(N, "+1"),S), parse(S, R), /*Res is R*/c(R, Res).
+tst(N, Res) :- phrase(n(N, "+1"),S), time(parse(S, Res)).%, /*Res is R*/c(R, Res).
 
 e(N, E) :-
 	N > 0,
