@@ -70,17 +70,25 @@ mul_div_factors(F, F) --> [].
 mul_div(*) --> [*].
 mul_div(/) --> [/].
 
+/*
 factor(F) --> pwr(P), !, pwrs(PP), {F is P^PP}.
 
 pwrs(Res) --> pwr_op, pwr(T1), !, pwrs(T), {Res is T1^T}.
 pwrs(1) --> [].
 
 pwr_op --> [^].
+*/
+factor(E) --> [open], expr(E), [close].
+factor(N) --> [N], {number(N)}.
+factor(R) --> plus_minus(Op), factor(F0), {F =.. [Op, F0], R is F}.
 
-pwr(E) --> [open], expr(E), [close].
-pwr(N) --> [N], {number(N)}.
-pwr(R) --> plus_minus(Op), factor(F0), {F =.. [Op, F0], R is F}.
-
+tell_ram_used :-
+	statistics(heapused, Hu), %statistics(heap,H),
+	statistics(localused, Lu), statistics(local,L),
+	statistics(globalused, Gu), statistics(global,G),
+	statistics(trailused, Tu), statistics(trail,T),
+	A="--------------",
+	format('~s~nH=~D ~nL=~D of ~D ~nG=~D of ~D ~nT=~D of ~D~n~s', [A,Hu, Lu, L, Gu, G, Tu, T,A]).
 
 parse(Str, Expr) :-
 	writeln(1),
@@ -106,8 +114,26 @@ tests :-
 tests1(N, Res) :-
    phrase(n(N, "+1000000"),S1), /*test(S1)*/parse(S1,R), Res is R.
 
-n(N, S) --> {N>0}, S, !, {N1 is N - 1}, n(N1, S).
-n(0, _) --> [].
+n(0, _) --> [], !.
+n(N, S) --> S, !, {N1 is N - 1}, n(N1, S).
+
+
+%lazystring([H | T]) --> [H], {when(nonvar(H),true)}, !, lazystring(T).
+%lazystring([]) --> [].
+
+lazystring(S, Inp, Outp) :-
+	when(nonvar(Inp),
+	     (
+	     Inp=[C|Inp1],
+	      S=[C|S1],
+	      !,
+	      lazystring(S1, Inp1, Outp)
+	     )).
+lazystring([], Inp, Inp).
+
+n_lazy(0, _) --> [], !.
+n_lazy(N, S) --> lazystring(S), !, {N1 is N - 1}, n(N1, S).
+
 
 tst(N, Res) :- phrase(n(N, "+1"),S), time(parse(S, Res)).%, /*Res is R*/c(R, Res).
 
