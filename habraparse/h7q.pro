@@ -124,12 +124,10 @@ n(N, S) --> S, !, {N1 is N - 1}, n(N1, S).
 lazystring(S, Inp, Outp) :-
 	when(nonvar(Inp),
 	     (
-	     Inp=[C|Inp1],
-	      S=[C|S1],
-	      !,
-	      lazystring(S1, Inp1, Outp)
+	     Inp=[C|Inp1], S=[C|S1]
+	     ->	 lazystring(S1, Inp1, Outp)
+	     ;	 Outp = Inp
 	     )).
-lazystring([], Inp, Inp).
 
 n_lazy(0, _) --> [], !.
 n_lazy(N, S) --> lazystring(S), !, {N1 is N - 1}, n(N1, S).
