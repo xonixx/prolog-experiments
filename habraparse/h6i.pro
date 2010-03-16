@@ -2,24 +2,6 @@
 :- use_module(library(http/dcg_basics)).
 
 %
-% helpful
-%
-/*
-ointeger(Val) -->
-	digit(D0),
-	digits(D),
-	{ mkval([D0|D], 8, Val)
-	}.
-
-mkval([W0|Weights], Base, Val) :-
-	mkval(Weights, Base, W0, Val).
-
-mkval([], _, W, W).
-mkval([H|T], Base, W0, W) :-
-	W1 is W0*Base+H,
-	mkval(T, Base, W1, W).
-*/
-%
 % lexer
 %
 
@@ -35,22 +17,15 @@ lexem_t(L) --> trashes, lexem(L), trashes.
 trashes --> trash, !, trashes.
 trashes --> [].
 
-trash --> comment_marker(End), !, ..., End.
+trash --> comment_marker(End), !, string(_), End.
 trash --> white.
 
 comment_marker("*)") --> "(*".
 comment_marker("*/") --> "/*".
 
-... --> [].
-... --> [_], !, (...).
-
 hex_start --> "0X".
 hex_start --> "0x".
 
-/*
-oct_start --> "0O".
-oct_start --> "0o".
-*/
 lexem(open) --> "(".
 lexem(close) --> ")".
 lexem(+) --> "+".
@@ -61,7 +36,15 @@ lexem(^) --> "^".
 
 lexem(N) --> hex_start, !, xinteger(N). % this handles hex numbers
 lexem(N) --> number(N). % this handles integers/floats
-%lexem(N) --> oct_start, !, ointeger(N). % this handles oct numbers
+lexem(var(A)) --> identifier_c(L), {string_to_atom(L, A)}.
+
+identifier_c([H | T]) --> alpha(H), !, many_alnum(T).
+
+alpha(H) --> [H], {code_type(H, alpha)}.
+alnum(H) --> [H], {code_type(H, alnum)}.
+
+many_alnum([H | T]) --> alnum(H), !, many_alnum(T).
+many_alnum([]) --> [].
 
 %
 % parser
@@ -91,7 +74,6 @@ add_all_right(R, [], R).
 */
 
 % grammar
-
 expr(E) --> term(T1), !, plus_minus_terms(Terms), {add_all(T1, Terms, E)}.
 
 plus_minus_terms([op_term(Op, T1) | T]) --> plus_minus(Op), term(T1), !, plus_minus_terms(T).
@@ -119,10 +101,26 @@ pwr(E) --> [open], expr(E), [close].
 pwr(N) --> [N], {number(N)}.
 pwr(F) --> plus_minus(Op), factor(F0), {F =.. [Op, F0]}.
 
+parse(Str, Expr) :- parse(Str, Expr, []).
 
-parse(Str, Expr) :-
+parse(Str, Expr, Vars) :-
 	phrase(lex(Lexems), Str),
-	phrase(expr(Expr), Lexems).
+	phrase(replace(Lexems1, Vars), Lexems),
+	phrase(expr(Expr), Lexems1).
+
+replace([H | T], Vars) -->
+	[L],
+	{ L = var(L1)
+	  -> (member(L1=V, Vars)
+	     ->	 parse(V, H, Vars)
+	     ;	 throw(unknown(L1))
+	     )
+	  ;L=H
+	},
+	replace(T, Vars).
+replace([], _) --> [].
+
+
 
 
 %
