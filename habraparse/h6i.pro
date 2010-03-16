@@ -33,6 +33,8 @@ lexem(-) --> "-".
 lexem(*) --> "*".
 lexem(/) --> "/".
 lexem(^) --> "^".
+lexem(,) --> ",".
+lexem(!) --> "!".
 
 lexem(N) --> hex_start, !, xinteger(N). % this handles hex numbers
 lexem(N) --> number(N). % this handles integers/floats
@@ -97,9 +99,22 @@ pwrs([]) --> [].
 
 pwr_op(^) --> [^].
 
-pwr(E) --> [open], expr(E), [close].
-pwr(N) --> [N], {number(N)}.
-pwr(F) --> plus_minus(Op), factor(F0), {F =.. [Op, F0]}.
+args([E1 | E]) --> expr(E1), !, comma_args(E).
+
+comma_args([E1 | E]) --> [,], expr(E1), !, comma_args(E).
+comma_args([]) --> [].
+
+post_f(fact) --> [!].
+post_f(sin) --> [sin].
+
+pwr(P) --> a(P0), post_f(Fn), {P =.. [Fn, P0]}, !.
+pwr(P) --> a(P).
+
+a(F) --> [var(Fn)], [open], args(A), [close], {F =.. [Fn | A]}.
+a(E) --> [open], expr(E), [close].
+a(N) --> [N], {number(N)}.
+a(F) --> plus_minus(Op), factor(F0), {F =.. [Op, F0]}.
+a(E) --> [E].
 
 parse(Str, Expr) :- parse(Str, Expr, []).
 
@@ -113,19 +128,32 @@ replace([H | T], Vars) -->
 	{ L = var(L1)
 	  -> (member(L1=V, Vars)
 	     ->	 parse(V, H, Vars)
-	     ;	 throw(unknown(L1))
+	     ;	 L=H
 	     )
 	  ;L=H
 	},
+	!,
 	replace(T, Vars).
 replace([], _) --> [].
 
+:- arithmetic_function(lg/1).
+:- arithmetic_function(ln/1).
+:- arithmetic_function(fact/1).
 
+lg(A, R) :- R is log10(A).
+ln(A, R) :- R is log(A).
+
+fact(A, 1) :- A < 2,!.
+fact(A, R) :- R is A * fact(A - 1).
 
 
 %
 %tst
 %
+tst1 :-
+	S = "8! + lg(r)^4 - w",
+	parse(S, R, [w="5*ln(r)", r="77.8"]),Res is R,
+	format('input: ~s~nparsed: ~w~ncalculated: ~w~n', [S, R, Res]).
 
 test(S) :-
 	format('~n-------~nInput string is:~n~s~n~n', [S]),
