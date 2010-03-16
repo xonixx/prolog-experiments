@@ -131,12 +131,10 @@ parse(Str, Expr, Vars) :-
 
 replace([H | T], Vars) -->
 	[L],
-	{ L = var(L1)
-	  -> (member(L1=V, Vars)
-	     ->	 parse(V, H, Vars)
-	     ;	 L=H
-	     )
-	  ;L=H
+	{ ((L = var(L1), member(L1=V, Vars))
+	  ->  parse(V, H, Vars)
+	  ;   L=H
+	  )
 	},
 	!,
 	replace(T, Vars).
