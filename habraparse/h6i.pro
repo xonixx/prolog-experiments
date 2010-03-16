@@ -71,8 +71,14 @@ add_all_right(R, [], R).
  <expr> --> <term> ( '+' <term> | '-' <term> )*
  <term> --> <factor> ( '*'  <factor> | '/'  <factor> )*
  <factor> --> <pwr> ( '^' <pwr> )*
- <pwr> --> <prime> | '(' <expr> ')' | '-' <factor> | '+' <factor>
+ <pwr> --> <a> <post_function> | <a>
+ <a> --> <prime>
+	 | <function_name> '(' <expr> ( ',' <expr> )*  ')'
+	 | '(' <expr> ')'
+	 | '-' <factor>
+	 | '+' <factor>
  <prime> --> ( '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' )+
+ <post_function> --> '!'
 */
 
 % grammar
@@ -105,7 +111,7 @@ comma_args([E1 | E]) --> [,], expr(E1), !, comma_args(E).
 comma_args([]) --> [].
 
 post_f(fact) --> [!].
-post_f(sin) --> [sin].
+post_f(sin) --> [var(sin)].
 
 pwr(P) --> a(P0), post_f(Fn), {P =.. [Fn, P0]}, !.
 pwr(P) --> a(P).
