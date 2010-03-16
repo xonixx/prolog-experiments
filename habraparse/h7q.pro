@@ -132,6 +132,10 @@ lazystring(S, Inp, Outp) :-
 n_lazy(0, _) --> [], !.
 n_lazy(N, S) --> lazystring(S), !, {N1 is N - 1}, n(N1, S).
 
+tst1(N,R) :-
+	time(phrase(n_lazy(N, "+1"),S)),
+	time(parse(S,R)).
+
 
 tst(N, Res) :- phrase(n(N, "+1"),S), time(parse(S, Res)).%, /*Res is R*/c(R, Res).
 
