@@ -28,6 +28,8 @@ hex_start --> "0x".
 
 lexem(open) --> "(".
 lexem(close) --> ")".
+lexem(open) --> "[".
+lexem(close) --> "]".
 lexem(+) --> "+".
 lexem(-) --> "-".
 lexem(*) --> "*".
@@ -112,6 +114,7 @@ comma_args([]) --> [].
 
 post_f(fact) --> [!].
 post_f(sin) --> [var(sin)].
+post_f(tan) --> [var(tan)].
 
 pwr(P) --> a(P0), post_f(Fn), {P =.. [Fn, P0]}, !.
 pwr(P) --> a(P).
