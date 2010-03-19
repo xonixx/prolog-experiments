@@ -30,8 +30,11 @@ all_ops([Op | Ops]) :-
 all_ops([]).
 
 all_formulas(Nums, Formula) :-
-	permutation(Nums, NumsP),
+	permutation(Nums, NumsP_0),
 
+	(   NumsP = NumsP_0
+	;   [A|B] = NumsP_0, NumsP = [-A|B] % also consider first negative
+	),
 	length(Nums,N),
 	NOps is N - 1,
 
