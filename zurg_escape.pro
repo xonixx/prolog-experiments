@@ -1,62 +1,51 @@
+time(john, 5).
+time(pit, 10).
+time(tom, 20).
+time(pat, 25).
+all([john, pit, tom, pat]).
 
+without(With, Without, R) :-
+ member(R, With),
+ \+ member(R, Without).
 
-time(bazz, 5).
-time(woody, 10).
-time(rex, 20).
-time(ham, 25).
+allPairs([H | T], H, P2) :-
+ member(P2, T).
 
-% step((L1, L2), (L11, L21), Time)
+allPairs([_ | T], P1, P2) :-
+ allPairs(T, P1, P2).
 
-without(L, Elts, L1) :-
-	Elts = [Elt | Oth],
-	append(L01, [Elt | L02], L),
-	append(L01, L02, L2),
-	without(L2, Oth, L22),
-	sort(L22, L1),
-	!.
-without(L, [], L1) :- sort(L, L1).
+step(state(L, yes), state(L1, no), Time) :-
+ allPairs(L, T1, T2),
+ findall(T, without(L, [T1, T2], T), L1),
+ time(T1, Time1),
+ time(T2, Time2),
+ Time is max(Time1, Time2).
 
-with(L, L1, L2) :-
-	append(L, L1, L11),
-	sort(L11, L2).
+step(state(L, no), state(L1, yes), Time) :-
+ all(All),
+ without(All, L, T),
+ append([T], L, L1),
+ time(T, Time).
 
-% without(L, Elts, L1) :-
+solve(Inp, Out, TimeGiven, [(Inp->S1/TimeGiven1) | T]) :-
+ TimeGiven > 0,
+ step(Inp, S1, Time),
+ TimeGiven1 is TimeGiven - Time,
+ solve(S1, Out, TimeGiven1, T).
 
-step((L1, L2), (L11, L21), Time) :-
-	member(Toy1, L1),
-	member(Toy2, L1),
-	Toy1 \= Toy2,
-	without(L1, [Toy1, Toy2], L11),
-	with(L2, [Toy1, Toy2], L21),
-	time(Toy1, Time1),
-	time(Toy2, Time2),
-	Time is max(Time1, Time2).
-
-stepBack((L11, L21), (L1, L2), Time) :-
-	member(Toy, L1),
-	time(Toy, Time),
-	without(L1, [Toy], L11),
-	with(L2, [Toy], L21).
-
-solve(B, A, T) :-
-	format('-> ~w, ~w, ~w~n', [B, A, T]), fail.
-
-solve(Before, After, TimeGiven) :-
-	TimeGiven > 0,
-	(   L1, _) = Before,
-	length(L1, Blength),
-	(   Blength >= 3
-	->  step(Before, S1, Time1),
-	    stepBack(S1, S2, Time2),
-	    TimeGiven1 is TimeGiven - Time1 - Time2,
-	    solve(S2, After, TimeGiven1)
-	;   step(Before, After, Time),
-	    TimeGiven >= Time
-	).
+solve(state([], _), _, TimeGiven, []) :-
+ TimeGiven >= 0.
 
 solve :-
-	L = [bazz, woody, rex, ham],
-	solve((L, []), ([], L), 60).
-	
-	
-	
+ all(All),
+ forall(solve(state(All, yes), _, 60, Solution),
+ formatSolution(Solution)).
+
+formatSolution(States) :-
+ nl,
+ writeln('Solution:'),
+ forall(member(state(L1, Has1)->state(L2, Has2)/T, States),
+        format('~w ~w -> ~w ~w, time remains:~w~n', [L1, Has1, L2, Has2, T])
+ ).
+
+
