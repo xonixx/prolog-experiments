@@ -5,47 +5,51 @@ time(pat, 25).
 all([john, pit, tom, pat]).
 
 without(With, Without, R) :-
- member(R, With),
- \+ member(R, Without).
+	member(R, With),
+	\+ member(R, Without).
 
+% generate all possible pairs
 allPairs([H | T], H, P2) :-
- member(P2, T).
+	member(P2, T).
 
 allPairs([_ | T], P1, P2) :-
- allPairs(T, P1, P2).
+	allPairs(T, P1, P2).
 
+% perform single step
 step(state(L, yes), state(L1, no), Time) :-
- allPairs(L, T1, T2),
- findall(T, without(L, [T1, T2], T), L1),
- time(T1, Time1),
- time(T2, Time2),
- Time is max(Time1, Time2).
+	allPairs(L, T1, T2),
+	findall(T, without(L, [T1, T2], T), L1),
+	time(T1, Time1),
+	time(T2, Time2),
+	Time is max(Time1, Time2).
 
 step(state(L, no), state(L1, yes), Time) :-
- all(All),
- without(All, L, T),
- append([T], L, L1),
- time(T, Time).
+	all(All),
+	without(All, L, T),
+	append([T], L, L1),
+	time(T, Time).
 
+% solve - perform steps while time left > 0
 solve(Inp, Out, TimeGiven, [(Inp->S1/TimeGiven1) | T]) :-
- TimeGiven > 0,
- step(Inp, S1, Time),
- TimeGiven1 is TimeGiven - Time,
- solve(S1, Out, TimeGiven1, T).
+	TimeGiven > 0,
+	step(Inp, S1, Time),
+	TimeGiven1 is TimeGiven - Time,
+	solve(S1, Out, TimeGiven1, T).
 
 solve(state([], _), _, TimeGiven, []) :-
- TimeGiven >= 0.
+	TimeGiven >= 0.
 
+% print all solutions
 solve :-
- all(All),
- forall(solve(state(All, yes), _, 60, Solution),
- formatSolution(Solution)).
+	all(All),
+	forall(solve(state(All, yes), _, 60, Solution),
+	       formatSolution(Solution)).
 
 formatSolution(States) :-
- nl,
- writeln('Solution:'),
- forall(member(state(L1, Has1)->state(L2, Has2)/T, States),
-        format('~w ~w -> ~w ~w, time remains:~w~n', [L1, Has1, L2, Has2, T])
- ).
+	nl,
+	writeln('Solution:'),
+	forall(member(state(L1, Has1)->state(L2, Has2)/T, States),
+	       format('~w ~w -> ~w ~w, time remains:~w~n', [L1, Has1, L2, Has2, T])
+	      ).
 
 
