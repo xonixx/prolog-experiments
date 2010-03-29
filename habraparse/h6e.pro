@@ -10,7 +10,9 @@ lex([H | T]) -->
 	lex(T).
 
 lex([]) -->
-	[].
+	[], !.
+
+lex([error], _, []).
 
 lexem_t(L) --> trashes, lexem(L), trashes.
 
@@ -85,7 +87,9 @@ add_all_right(R, [], R).
 expr(E) --> term(T1), !, plus_minus_terms(Terms), {add_all(T1, Terms, E)}.
 
 plus_minus_terms([op_term(Op, T1) | T]) --> plus_minus(Op), term(T1), !, plus_minus_terms(T).
-plus_minus_terms([]) --> [].
+plus_minus_terms([]) --> [], !.
+plus_minus_terms([error],_,[]).
+
 
 plus_minus(+) --> [+].
 plus_minus(-) --> [-].
@@ -118,16 +122,28 @@ pwr(P) --> a(P).
 
 a(F) --> [var(Fn)], [open], args(A), [close], {F =.. [Fn | A]}.
 a(E) --> [open], expr(E), [close].
-a(N) --> [N], {number(N)}.
+a(N) --> [N], {is_expr(N)}.
 a(F) --> plus_minus(Op), factor(F0), {F =.. [Op, F0]}.
-a(E) --> [E].
+
+is_expr(E) :- number(E), !.
+is_expr(E) :- E =.. [_|T], T=[_|_], are_expr(T).
+
+are_expr([H | T]) :- is_expr(H), !, are_expr(T).
+are_expr([]).
 
 parse(Str, Expr) :- parse(Str, Expr, []).
 
 parse(Str, Expr, Vars) :-
-	phrase(lex(Lexems), Str),
-	phrase(replace(Lexems1, Vars), Lexems),
-	phrase(expr(Expr), Lexems1).
+	phrase(lex(Lexems), Str), check_error(lex, Lexems),
+	phrase(replace(Lexems1, Vars), Lexems), check_error(replace, Lexems1),
+	phrase(expr(Expr), Lexems1), check_error(expr, Expr).
+
+check_error(Phase, Lst) :-
+	format('Checking error for phase=~w, lst=~w~n', [Phase, Lst]),
+	(   append(Parsed, [error], Lst)
+	->  throw(parse_error(Phase, Parsed))
+	;   true
+	).
 
 replace([H | T], Vars) -->
 	[L],
