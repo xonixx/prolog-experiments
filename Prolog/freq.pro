@@ -43,7 +43,7 @@ ask(Assoc, N, M) :-
 	ask(Assoc, N1, M).
 
 tst(Lst) :-
-	N = 1000000, M = 200,
+	N = 1000000, M = 500,
 
 	format('Generating ~D randoms from 0 to ~D...~n', [N, M]),
 	time(phrase(gen_rnd_lst(N, M), L)),

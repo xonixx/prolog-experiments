@@ -85,16 +85,16 @@ add_all_right(R, [], R).
 
 % grammar
 expr(E) --> term(T1), !, plus_minus_terms(Terms), {add_all(T1, Terms, E)}.
+expr(error_expr,_,[]).
 
 plus_minus_terms([op_term(Op, T1) | T]) --> plus_minus(Op), term(T1), !, plus_minus_terms(T).
 plus_minus_terms([]) --> [], !.
-plus_minus_terms([error],_,[]).
-
 
 plus_minus(+) --> [+].
 plus_minus(-) --> [-].
 
 term(T) --> factor(F1), !, mul_div_factors(Factors), {add_all(F1, Factors, T)}.
+term(error_term,_,[]).
 
 mul_div_factors([op_term(Op, F1) | T]) --> mul_div(Op), factor(F1), !, mul_div_factors(T).
 mul_div_factors([]) --> [].
@@ -103,6 +103,7 @@ mul_div(*) --> [*].
 mul_div(/) --> [/].
 
 factor(F) --> pwr(P), !, pwrs(PP), {add_all_right(P, PP, F)}.
+factor(error_factor,_,[]).
 
 pwrs([op_term(Op, T1) | T]) --> pwr_op(Op), pwr(T1), !, pwrs(T).
 pwrs([]) --> [].
@@ -124,6 +125,7 @@ a(F) --> [var(Fn)], [open], args(A), [close], {F =.. [Fn | A]}.
 a(E) --> [open], expr(E), [close].
 a(N) --> [N], {is_expr(N)}.
 a(F) --> plus_minus(Op), factor(F0), {F =.. [Op, F0]}.
+a(error_a,_,[]).
 
 is_expr(E) :- number(E), !.
 is_expr(E) :- E =.. [_|T], T=[_|_], are_expr(T).
