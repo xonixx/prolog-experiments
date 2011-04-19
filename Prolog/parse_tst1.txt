@@ -1,0 +1,11 @@
+type some_type
+prop1 prop1_value
+prop2 prop2_value
+
+type anohter_type
+prop1 prop1_value
+prop2 prop2_value
+
+type yet_anohter_type
+prop1 prop1_value
+prop2 prop2_value
