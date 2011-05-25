@@ -8,6 +8,14 @@ take(N, Stream, ResultList) :-
 	length(ResultList, N),
 	append(ResultList, _, Stream).
 
+take_while(Stream, Pred, ResultList) :-
+	Stream = [H | T],
+	(   call(Pred, H)
+	->  ResultList = [H | Rest],
+	    take_while(T, Pred, Rest)
+	;   ResultList = []
+	).
+
 not_divisible(H, X) :- X mod H =\= 0.
 
 filter_stream(G, S, S1) :-
@@ -45,3 +53,10 @@ test(N) :-
 	take(N, PP, PN),
 	format('first ~d primes: ~w~n', [N, PN])
 	.
+
+less_then(N, X) :- X < N.
+
+test1(N) :-
+	primes(PP),
+	take_while(PP, less_then(N), PN),
+	format('primes less then ~d: ~w~n', [N, PN]).
