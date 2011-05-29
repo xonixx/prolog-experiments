@@ -1,0 +1,1 @@
+print sum((float(x.replace(',','.')) for x in open("numbers_large.txt").read().split(" ") if x))
